@@ -2,18 +2,18 @@ pragma solidity ^0.4.8;
 
 contract SmartMeters {
 
-    modifier onlyIssuer() {
-        if ((msg.sender != issuer) || (!issuerSet)) {
-            throw;
+    modifier onlyIssuer() {                                                     //similar to only owner function
+        if ((msg.sender != issuer) || (!issuerSet)) {                           //if message sender is not equal to issuer OR (opposite of)issuerSet
+            revert();                                                             //Throw
         }
-        _;
+        _;                                                                      //If false continue
     }
 
     address public issuer;
-    mapping (address => address) public owner;
-    bool issuerSet = false;
+    mapping (address => address) public owner;                                  //map address to address ??why map itself to itself??
+    bool issuerSet = false;                                                     //set the boolean issuerSet to false
 
-    function changeOwner(address meterAddress, address newOwner)
+    function changeOwner(address meterAddress, address newOwner) public         //Only allow the issuer to change the address of a meter to a newOwner
         onlyIssuer()
     {
         owner[meterAddress] = newOwner;
@@ -24,9 +24,9 @@ contract SmartMeters {
     // it would not be possible to let Truffle select it from one of the
     // accounts made available by TestRPC, and the account would have to be
     // manually changed in code when testing.
-    function setIssuer(address _issuer) {
-        if (!issuerSet) {
-            issuer = _issuer;
+    function setIssuer(address _issuer) public {
+        if (!issuerSet) {                                                       //If (opposite of)Issuer set
+            issuer = _issuer;                                                   //set issuer to _issuer and update issuerset to true
             issuerSet = true;
         }
     }
